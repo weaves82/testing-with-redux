@@ -1,13 +1,8 @@
 export const actionTypes = {
   CORRECT_GUESS: "CORRECT GUESS",
+  GUESS_WORD: "GUESS_WORD",
 };
 
-/**
- * @function correctGuess
- * @returns {object} - Action object with type 'CORRECT_GUESS'
- */
-export const correctGuess = () => {
-  return {
-    type: actionTypes.CORRECT_GUESS,
-  };
+export const guessWord = (guessedWord) => {
+  return function (dispatch, getState) {};
 };
