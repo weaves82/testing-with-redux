@@ -99,5 +99,8 @@ describe("redux props", () => {
       const guessWordCallArg = guessWordMock.mock.calls[0][0];
       expect(guessWordCallArg).toBe(guessedWord);
     });
+    test("that input field is cleared", () => {
+      expect(wrapper.state("currentGuess")).toBe("");
+    });
   });
 });

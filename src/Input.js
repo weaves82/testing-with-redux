@@ -16,6 +16,9 @@ export class UnconnectedInput extends Component {
     evt.preventDefault();
     const guessedWord = this.state.currentGuess;
     guessedWord && guessedWord.length > 0 && this.props.guessWord(guessedWord);
+    this.setState({
+      currentGuess: "",
+    });
   };
 
   onChangeHandler = (evt) => {
