@@ -1,8 +1,8 @@
 import { actionTypes } from "../actions";
 
 /**
- * @function successReducer
- * @params {array} state - Array of guessed words
+ * @function gaveUpReducer
+ * @params {boolean} state - boolean
  * @params {object} action - action to be reduced
  * @returns {boolean} - new success state
  */
@@ -10,7 +10,7 @@ import { actionTypes } from "../actions";
 // eslint-disable-next-line import/no-anonymous-default-export
 export default (state = false, action) => {
   switch (action.type) {
-    case actionTypes.CORRECT_GUESS:
+    case actionTypes.GAVE_UP:
       return true;
     case actionTypes.RESET_GAME:
       return false;

@@ -38,6 +38,10 @@ describe("render", () => {
       const submitButton = findByTestAttr(wrapper, "submit-button");
       expect(submitButton.length).toBe(1);
     });
+    test("renders Give Up button", () => {
+      const giveUpButton = findByTestAttr(wrapper, "give-up-button");
+      expect(giveUpButton.length).toBe(1);
+    });
   });
   describe("word has been guessed", () => {
     let wrapper;
@@ -58,6 +62,21 @@ describe("render", () => {
       expect(submit.length).toBe(0);
     });
   });
+  describe("given up on word", () => {
+    let wrapper;
+    beforeEach(() => {
+      const initialState = { success: false, gaveUp: true };
+      wrapper = setup(initialState);
+    });
+    test("doesn't render input component", () => {
+      const component = findByTestAttr(wrapper, "input-box");
+      expect(component.length).toBe(0);
+    });
+    test("doesn't render Guess word button", () => {
+      const giveUpButton = findByTestAttr(wrapper, "give-up-button");
+      expect(giveUpButton.length).toBe(0);
+    });
+  });
 });
 
 describe("redux props", () => {
@@ -72,35 +91,49 @@ describe("redux props", () => {
     const guessWordProp = wrapper.instance().props.guessWord;
     expect(guessWordProp).toBeInstanceOf(Function);
   });
-  describe("calling submit button", () => {
-    let wrapper;
-    let guessWordMock;
-    const guessedWord = "train";
-    beforeEach(() => {
-      guessWordMock = jest.fn();
+});
 
-      const props = {
-        guessWord: guessWordMock,
-      };
+test("the giveUp action works on click", () => {
+  const giveUpMock = jest.fn();
+  const props = {
+    giveUp: giveUpMock,
+  };
+  const wrapper = shallow(<UnconnectedInput {...props} />);
+  const giveUpButton = findByTestAttr(wrapper, "give-up-button");
 
-      wrapper = shallow(<UnconnectedInput {...props} />);
+  giveUpButton.simulate("click", { preventDefault() {} });
 
-      wrapper.setState({ currentGuess: guessedWord });
+  expect(giveUpMock.mock.calls.length).toBe(1);
+});
 
-      const submitButton = findByTestAttr(wrapper, "submit-button");
+describe("calling submit button", () => {
+  let wrapper;
+  let guessWordMock;
+  const guessedWord = "train";
+  beforeEach(() => {
+    guessWordMock = jest.fn();
 
-      submitButton.simulate("click", { preventDefault() {} });
-    });
-    test("that 'guessWord' is called on submit", () => {
-      const guessWordCallCount = guessWordMock.mock.calls.length;
-      expect(guessWordCallCount).toBe(1);
-    });
-    test("that 'guessword' is called with correct arguments", () => {
-      const guessWordCallArg = guessWordMock.mock.calls[0][0];
-      expect(guessWordCallArg).toBe(guessedWord);
-    });
-    test("that input field is cleared", () => {
-      expect(wrapper.state("currentGuess")).toBe("");
-    });
+    const props = {
+      guessWord: guessWordMock,
+    };
+
+    wrapper = shallow(<UnconnectedInput {...props} />);
+
+    wrapper.setState({ currentGuess: guessedWord });
+
+    const submitButton = findByTestAttr(wrapper, "submit-button");
+
+    submitButton.simulate("click", { preventDefault() {} });
+  });
+  test("that 'guessWord' is called on submit", () => {
+    const guessWordCallCount = guessWordMock.mock.calls.length;
+    expect(guessWordCallCount).toBe(1);
+  });
+  test("that 'guessword' is called with correct arguments", () => {
+    const guessWordCallArg = guessWordMock.mock.calls[0][0];
+    expect(guessWordCallArg).toBe(guessedWord);
+  });
+  test("that input field is cleared", () => {
+    expect(wrapper.state("currentGuess")).toBe("");
   });
 });
